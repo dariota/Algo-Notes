@@ -22,8 +22,8 @@
 
 \tikzstyle{bnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=black!30]
 \tikzstyle{rnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=red!30]
-\tikzstyle{node} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=white!30]
-\tikzstyle{leaf} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=black, fill=black!30]
+\tikzstyle{nnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=white!30]
+\tikzstyle{leaf} = [rectangle, minimum width=0.6cm, minimum height=0.3cm,text centered, draw=black, fill=black]
 
 \begin{document}
 	
@@ -192,9 +192,58 @@ Indexing the node at position n requires accessing $n-1$ nodes and therefore is 
 
 They do not over-allocate any memory, but the reference(s) waste space for every node.
 
+\begin{figure}[ph]
+\centering
+\begin{tikzpicture}[node distance=2cm]
+	\node (a) [nnode] {"a"};
+	\node (cd) [nnode, right of=a] {"cd"};
+	\node (q) [nnode, right of=cd] {"q"};
+	\node (null) [leaf, right of=q] {};
+	\path[->] (a) edge (cd);
+	\path[->] (cd) edge (q);
+	\path[->] (q) edge (null);
+\end{tikzpicture}
+\caption{A singly linked, null terminated list. A reference to this list holds the address of the node containing "a".}
+\end{figure}
+
+\begin{figure}[ph]
+\centering
+\begin{tikzpicture}[node distance=2cm]
+	\node (a) [nnode] {"a"};
+	\node (cd) [nnode, right of=a] {"cd"};
+	\node (q) [nnode, right of=cd] {"q"};
+	\path[->] (a) edge [bend left=60, looseness=0.5] node[above, yshift=-1mm] {\tiny{previous}} (q);
+	\path[->] (a) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{next}} (cd);
+	\path[->] (cd) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{previous}} (a);
+	\path[->] (cd) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{next}} (q);
+	\path[->] (q) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{previous}} (cd);
+	\path[->] (q) edge [bend left=60, looseness=0.5] node[above, yshift=-1mm] {\tiny{next}} (a);
+\end{tikzpicture}
+\caption{A doubly linked, circular list. As there is no inherent start point, any node can be the start.}
+\end{figure}
+
+\begin{figure}[ph]
+\centering
+\begin{tikzpicture}[node distance=2cm]
+	\node (a) [nnode] {"a"};
+	\node (f) [nnode, right of=a] {"f"};
+	\node (cd) [nnode, right of=f] {"cd"};
+	\node (q) [nnode, right of=cd] {"q"};
+	\path[->] (a) edge [bend left=60, looseness=0.5] node[above, yshift=-1mm] {\tiny{previous}} (q);
+	\path[->] (a) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{next}} (f);
+	\path[->] (f) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{previous}} (a);
+	\path[->] (f) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{next}} (cd);
+	\path[->] (cd) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{previous}} (f);
+	\path[->] (cd) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{next}} (q);
+	\path[->] (q) edge [bend left=30, looseness=0.5] node[above, yshift=-1mm] {\tiny{previous}} (cd);
+	\path[->] (q) edge [bend left=60, looseness=0.5] node[above, yshift=-1mm] {\tiny{next}} (a);
+\end{tikzpicture}
+\caption{The previous list, after insertion of the value "f" between "a" and "cd". Note that the cd's "previous" and a's "next" references must be updated.}
+\end{figure}
+
 \subsubsection{Binary Search Tree}
 
-A node is defined as the start of the structure, also known as a root. This is the entry point to the structure. Nodes at the end of a particular path are called leaves. These may hold references to null values to indicate that they have nothing after them, or they may hold references to sentinel values which make search more efficient than plain nulls.
+A node is defined as the start of the structure, also known as a root. This is the entry point to the structure. Nodes at the end of a particular path are called leaves. These may hold references to null values to indicate that they have nothing after them, or they may hold references to sentinel values which make search more efficient than plain nulls by reducing the comparisons needed.
 
 Every node has two associated children, one left and one right. One of these is always smaller than the parent and the other larger, with the same rule applying across the entire tree. Generally, the left node is smaller.
 
@@ -205,6 +254,39 @@ As every operation on the tree must find the value or find where it should be pl
 However, in the case that the data is passed in already sorted, the tree property forces it all to one side of the root. In this case, the tree degenerates to a linked list, with the added downside that insertion and deletion depend on search and, as such, are $O(n)$.
 
 Binary search trees are therefore vulnerable to dataset poisoning, similar to quicksort (see searches, below), where they are intentionally given data that will cause them to slow.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2cm]
+	\node (6) [nnode] {6};
+	\node (3) [nnode, left of=6, yshift=-1.2cm] {3};
+	\node (1) [nnode, below of=3, yshift=0.5cm, xshift=-1cm] {1};
+	\node (-3) [nnode, below of=1, yshift=0.5cm, xshift=-1cm] {-3};
+	\node (2) [nnode, below of=1, yshift=0.5cm, xshift=1cm] {2};
+	\node (5) [nnode, below of=3, yshift=0.5cm, xshift=1cm] {5};
+	\node (13) [nnode, right of=6, yshift=-1.2cm, xshift=0.5cm] {13};
+	\node (8) [nnode, below of=13, yshift=0.5cm, xshift=-1cm] {8};
+	\node (7) [nnode, below of=8, yshift=0.5cm, xshift=-1cm] {7};
+	\node (25) [nnode, below of=13, yshift=0.5cm, xshift=1cm] {25};
+	\node (sentinel) [nnode, below of=6, yshift=-3.5cm] {sent.};
+	\path[->] (6) edge (3);
+	\path[->] (6) edge (13);
+	\path[->] (13) edge (8);
+	\path[->] (13) edge (25);
+	\path[->] (8) edge (7);
+	\path[->] (3) edge (1);
+	\path[->] (3) edge (5);
+	\path[->] (1) edge (2);
+	\path[->] (1) edge (-3);
+	\path[->] (-3) edge (sentinel);
+	\path[->] (2) edge (sentinel);
+	\path[->] (5) edge (sentinel);
+	\path[->] (7) edge (sentinel);
+	\path[->] (25) edge (sentinel);
+\end{tikzpicture}
+
+\caption{A binary search tree, with a sentinel node replacing the leaves to simplify search. Note that it is the left \textit{and} right child of any node pointing to it.}
+\end{figure}
 
 \subsubsection{Red-Black Tree}
 
