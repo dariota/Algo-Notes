@@ -2,7 +2,7 @@
 \usepackage{algpseudocode}
 \usepackage{tikz}
 \usepackage{pgfplots}
-\usetikzlibrary{positioning}
+\usetikzlibrary{shapes.geometric, arrows, positioning}
 
 \pagenumbering{roman}
 
@@ -19,6 +19,11 @@
 \addcontentsline{toc}{section}{#1}
 \subsection*{#1}
 }
+
+\tikzstyle{bnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=black!30]
+\tikzstyle{rnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=red!30]
+\tikzstyle{node} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=white!30]
+\tikzstyle{leaf} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=black, fill=black!30]
 
 \begin{document}
 	
@@ -103,13 +108,69 @@ However, in the general case, the worst case for searching the array is $O(n)$ a
 
 Unlike other data structures, insertion and deletion are not supported, every index must contain something. If the array is not allocated well, it may waste space with unfilled indices. However, its space complexity should only be $O(n)$.
 
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline value & 5 & 13 & -5 & 3567 & -1324\\
+index & 0 & 1 & 2 & 3 & 4 \\
+\hline address & 0x00 & 0x04 & 0x08 & 0x10 & 0x14 \\
+\hline
+\end{tabular}
+ 
+\vspace{2mm}
+
+This assumes the array is zero-indexed (i.e. the first index is 0), contains 32 bit values (which are interpreted as signed integers) and that addresses count up in bytes.
+\end{table}
+
 \subsubsection{Dynamic Array}
 
 This is a list allowing random access, generally backed by an array which it can reallocate as it grows. This allows it to reap the benefits of a basic array, while adding some flexibility.
 
 Indexing continues to be $O(1)$ as in an array as the underlying code to fetch the value should just return the value at an index of an array. This $O(1)$ should take slightly longer than that of a basic array, as it adds the overhead of a function call.
 
-Insertion is $O(n)$ in the worst case, where adding the item would cause the dynamic array to exceed the capacity of its underlying array and has to copy the contents over to a new one. However, in a well designed dynamic array under normal conditions, this shouldn't happen often, "paying back" the cost over time when it doesn't happen.
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline value & 5 & \textbf{13} & -5 \\
+\hline index & 0 & 1 & 2 \\
+\hline
+\end{tabular}
+
+\vspace{2mm}
+
+Retrieving a value (in bold) from index 1
+\end{table}
+
+Insertion is $O(n)$ in the worst case, such as inserting into the first index, causing all values to be shifted along the array. While inserting at the end of the array (i.e. appending) avoids this issue, it can still result in an $O(n)$ operation if the insertion would cause the array to exceed its current capacity. This results is the array resizing (in a manner that depends on implementation) and having to copy over all $n$ values.
+
+\begin{table}[h!]
+\centering
+The array begins in this state, with its current capacity being entirely used.
+
+\vspace{2mm}
+
+\begin{tabular}{|c|c|c|c|}
+\hline value & 5 & 13 & -5 \\
+\hline index & 0 & 1 & 2 \\
+\hline
+\end{tabular}
+
+\vspace{2mm}
+
+Subsequently, an insert operation is called, to insert the value $34$ at index 0. The array must first grow. Rather than copying over the values and then inserting, the array has space allocated and values are inserted in the order intended.
+
+\vspace{2mm}
+
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline value & 34 & 5 & 13 & -5 & \textit{0} \\
+\hline index & 0 & 1 & 2 & 3 & \textit{4} \\
+\hline
+\end{tabular}
+
+\vspace{2mm}
+
+Here, the value and index in italics are hidden from the array's user, as they have not assigned anything to that location yet.
+\end{table}
 
 Deletion is $O(n)$, whether due to the elements after the deleted one being shuffled into its place or due to the dynamic array releasing its memory by shrinking the backing array, which requires copying values.
 
