@@ -20,8 +20,8 @@
 \subsection*{#1}
 }
 
-\tikzstyle{bnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=black!30]
-\tikzstyle{rnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=red!30]
+\tikzstyle{bnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=black, fill=black!30]
+\tikzstyle{rnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=black, fill=red!30]
 \tikzstyle{nnode} = [circle, minimum width=1cm, minimum height=1cm,text centered, draw=blue, fill=white!30]
 \tikzstyle{leaf} = [rectangle, minimum width=0.6cm, minimum height=0.3cm,text centered, draw=black, fill=black]
 
@@ -309,6 +309,49 @@ These rules limit the maximum height of the tree. No path from root to the furth
 This is due to rule 5. If the shortest path contains only black nodes, then the longest path must alternate from red to black to preserve all other properties. Therefore, the longest branch is no longer than two times the shortest.
 
 Insertion, deletion and search are $O(\log{n})$, the same as the best case of a binary search tree, for the same reasons. Each modifying operation also performs a check that it did not cause a violation of the above properties. Rebalancing the tree to fit them again is of complexity $O(\log{n})$, but performing it puts off the next such operation for long enough that it can be considered amortised $O(1)$.
+
+\begin{figure}[h]
+\centering
+\begin{tabular}{lr}
+\begin{tikzpicture}[node distance=1.5cm]
+	\node (1) [bnode] {1};
+	\node (-3) [rnode, left of=1, yshift=-1.2cm] {-3};
+	\node (-3l) [leaf, below of=-3, yshift=0.7cm, xshift=-1cm] {};
+	\node (-3r) [leaf, below of=-3, yshift=0.7cm, xshift=1cm] {};
+	\node (3) [rnode, right of=1, yshift=-1.2cm] {3};
+	\node (3l) [leaf, below of=3, yshift=0.7cm, xshift=-1cm] {};
+	\node (3r) [leaf, below of=3, yshift=0.7cm, xshift=1cm] {};
+	\path[->] (1) edge (-3);
+	\path[->] (1) edge (3);
+	\path[->] (-3) edge (-3l);
+	\path[->] (-3) edge (-3r);
+	\path[->] (3) edge (3l);
+	\path[->] (3) edge (3r);
+\end{tikzpicture} &
+\begin{tikzpicture}[node distance=1.5cm]
+	\node (3) [bnode] {3};
+	\node (1) [bnode, left of=3, yshift=-1.2cm] {1};
+	\node (1r) [leaf, below of=1, yshift=0.7cm, xshift=1cm] {};
+	\node (-3) [rnode, below of=1, yshift=0.7cm, xshift=-1cm] {-3};
+	\node (-3l) [leaf, below of=-3, yshift=0.7cm, xshift=-1cm] {};
+	\node (-3r) [leaf, below of=-3, yshift=0.7cm, xshift=1cm] {};
+	\node (5) [bnode, right of=3, yshift=-1.2cm] {5};
+	\node (5l) [leaf, below of=5, yshift=0.7cm, xshift=-1cm] {};
+	\node (5r) [leaf, below of=5, yshift=0.7cm, xshift=1cm] {};
+	\path[->] (3) edge (1);
+	\path[->] (3) edge (5);
+	\path[->] (1) edge (1r);
+	\path[->] (1) edge (-3);
+	\path[->] (-3) edge (-3l);
+	\path[->] (-3) edge (-3r);
+	\path[->] (5) edge (5l);
+	\path[->] (5) edge (5r);
+\end{tikzpicture}
+\end{tabular}
+On the left, a red-black tree, balanced by the rules. On the right, the value 5 is inserted and triggers a rebalancing due to a violation of rule 5.
+
+The leaves can be replaced with a sentinel node as in BSTs.
+\end{figure}
 
 \pagebreak
 
