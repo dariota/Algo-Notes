@@ -1,5 +1,10 @@
 \documentclass[]{article}
 \usepackage{algpseudocode}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usetikzlibrary{positioning}
+
+\pagenumbering{roman}
 
 \title{Time Complexity, Data Structures, Sorts and Searches}
 \author{D\'{a}rio Tavares Antunes}
@@ -22,6 +27,7 @@
 \tableofcontents
 
 \pagebreak
+\pagenumbering{arabic}
 
 \numberLess{Big-O Notation}
 
@@ -34,6 +40,8 @@ Big-O notation defines how the time taken to complete a task scales with the siz
 It takes only the largest contributing term of the polynomial describing the time complexity of a given function. These follow the inequality below:
 
 \[n! > c^{n} > n^{k} > n^{k-1} > n\log{n} > n > \log{n} > 1\]
+
+A graphical representation can be found in Figure \ref{fig:time} on page \pageref{fig:time}. Note that these functions are only sampled (or at least I tried to only sample them) at integer values, as n will always be a natural number.
 
 These time complexities are called, respectively; factorial, exponential, polynomial (twice), linearithmic (not a very common name), linear, logarithmic and constant. The reason for these should, hopefully, be obvious.
 
@@ -56,6 +64,28 @@ Finally, the for loop. We first calculate the time complexity of its inner opera
 The loop completes once for each value, which is to say n times. It is therefore $O(n)$.
 
 We then add these values to obtain a polynomial representing the time complexity of the function, $T(n) = 2n + 1$. The highest order is n, and so the function has $O(n)$ time complexity.
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+\begin{axis}[domain=0:20, samples=21,grid=major,ymin=0,ymax=800,xmin=0,xmax=20,
+    restrict y to domain=0:10000,
+    xlabel=$n$,ylabel=$y(n)$, legend pos=north west, width=12cm]
+\addplot [color=red]    {factorial(x)};
+\addplot [color=green]  {pow(2, x)};
+\addplot [color=black] {pow(x, 3)}; 
+\addplot [color=purple] {pow(x, 2)}; 
+\addplot [color=blue]   {x * log2(x)};
+\addplot [color=cyan] {x}; 
+\addplot [color=magenta] {log2(x)}; 
+\addplot [color=yellow] {1}; 
+
+\legend{$n!$, $2^n$, $n^3$, $n^2$, $n\log{n}$, $n$, $\log{n}$, $1$}
+\end{axis}
+\end{tikzpicture}
+\caption{Time Complexities}
+\label{fig:time}
+\end{figure}
 
 \pagebreak
 
