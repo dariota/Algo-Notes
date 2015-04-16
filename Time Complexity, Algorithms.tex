@@ -1,8 +1,11 @@
 \documentclass[]{article}
+\usepackage{hyperref}
 \usepackage{algpseudocode}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usetikzlibrary{shapes.geometric, arrows, positioning}
+
+\hypersetup{pdfborder={0 0 0 [1 1]}, pdftitle={Time Complexity, Data Structures, Sorts and Searches}, pdfauthor={D\'ario Tavares Antunes},colorlinks=true, linkcolor=blue, urlcolor=blue}
 
 \pagenumbering{roman}
 
@@ -46,7 +49,7 @@ It takes only the largest contributing term of the polynomial describing the tim
 
 \[n! > c^{n} > n^{k} > n^{k-1} > n\log{n} > n > \log{n} > 1\]
 
-A graphical representation can be found in Figure \ref{fig:time} on page \pageref{fig:time}. Note that these functions are only sampled (or at least I tried to only sample them) at integer values, as n will always be a natural number.
+A graphical representation can be found in Figure \ref{fig:time}. Note that these functions are only sampled (or at least I tried to only sample them) at integer values, as n will always be a natural number.
 
 These time complexities are called, respectively; factorial, exponential, polynomial (twice), linearithmic (not a very common name), linear, logarithmic and constant. The reason for these should, hopefully, be obvious.
 
@@ -377,7 +380,7 @@ Insertion takes $O(\log{n})$ time, as items are inserted at the next available l
 
 Deleting the root of a heap is achieved by replacing it with the last element of the last level, then swapping it with the larger of its children until the heap properties are satisfied again. This takes at most $O(\log{n})$ operations to shift it down the height of the tree. As all subtrees of a valid heap are themselves valid heaps, this can be used to delete any node.
 
-Naively, heapifying a binary tree could be done by simply inserting every item onto a new heap, with each of the $n$ operations taking $O(\log{n})$ operations. This therefore takes $O(n\log{n})$ time. However, the values can instead be put onto a complete binary tree which then works from the bottom up, heapifying sub-trees until the whole heap is valid. This can be shown to be $O(n)$\footnote{http://en.wikipedia.org/wiki/Binary\_heap\#Building\_a\_heap}.
+Naively, heapifying a binary tree could be done by simply inserting every item onto a new heap, with each of the $n$ operations taking $O(\log{n})$ operations. This therefore takes $O(n\log{n})$ time. However, the values can instead be put onto a complete binary tree which then works from the bottom up, heapifying sub-trees until the whole heap is valid. This can be shown to be $O(n)$\footnote{\url{http://en.wikipedia.org/wiki/Binary\_heap\#Building\_a\_heap}}.
 
 Extracting the max value can be done in O(1) time as it can simply be deleted and the larger of its children made the root without violating the heap property.
 
