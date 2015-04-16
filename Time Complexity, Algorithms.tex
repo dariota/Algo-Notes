@@ -248,7 +248,7 @@ They do not over-allocate any memory, but the reference(s) waste space for every
 
 A node is defined as the start of the structure, also known as a root. This is the entry point to the structure. Nodes at the end of a particular path are called leaves. These may hold references to null values to indicate that they have nothing after them, or they may hold references to sentinel values which make search more efficient than plain nulls by reducing the comparisons needed.
 
-Every node has two associated children, one left and one right. One of these is always smaller than the parent and the other larger, with the same rule applying across the entire tree. Generally, the left node is smaller.
+Every node has two associated children, one left and one right. One of these is always smaller than or equal to the parent and the other larger, with the same rule applying across the entire tree. Generally, the left node is smaller.
 
 When data is inserted in the tree randomly, it should balance itself, with the root having roughly half the nodes to its left and half to its right. This allows a binary search (see searches, below) to be performed on the tree, allowing $O(\log{n})$ searching. This can also be viewed as each descent of a level removing the need to check half of the current sub-tree, leading to a logarithmic time search.
 
